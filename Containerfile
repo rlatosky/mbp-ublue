@@ -40,11 +40,12 @@ RUN --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
     --mount=type=cache,dst=/var/cache/rpm-ostree \
     --mount=type=bind,from=akmods,src=/rpms,dst=/tmp/akmods-rpms \
     sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/_copr_ublue-os-akmods.repo && \
+    find /tmp/akmods-extra-rpms && \
     rpm-ostree install \
     /tmp/akmods-rpms/kmods/*kvmfr*.rpm \
     /tmp/akmods-rpms/kmods/*v4l2loopback*.rpm \
     /tmp/akmods-rpms/kmods/*wl*.rpm \
-    /tmp/akmods-extra-rpms/kmods/*facetimehd*.rpm \
+    /tmp/akmods-extra-rpms/kmods/kmod-facetimehd*.rpm \
     /tmp/akmods-extra-rpms/kmods/*gcadapter_oc*.rpm \
     /tmp/akmods-extra-rpms/kmods/*evdi*.rpm \
     || true && \
