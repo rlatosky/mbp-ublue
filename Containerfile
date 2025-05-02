@@ -2,6 +2,7 @@
 
 ARG KERNEL_VERSION
 FROM ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION} AS akmods-extra
+FROM ghcr.io/ublue-os/akmods:${KERNEL_VERSION} AS akmods
 
 FROM scratch AS ctx
 COPY build_files /
