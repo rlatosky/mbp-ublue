@@ -1,15 +1,13 @@
 # Allow build scripts to be referenced without being copied into the final image
 
 ARG KERNEL_VERSION
-ENV KERNEL_VERSION=bazzite-42-6.14.4-103.bazzite.fc42.x86_64
 FROM ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION} AS akmods-extra
 
 FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM ghcr.io/ublue-os/bazzite:stable AS bazzite
-
+FROM ghcr.io/ublue-os/bazzite:stable
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
@@ -39,14 +37,17 @@ FROM ghcr.io/ublue-os/bazzite:stable AS bazzite
 
 RUN --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
     --mount=type=cache,dst=/var/cache/rpm-ostree \
+    --mount=type=bind,from=akmods,src=/rpms,dst=/tmp/akmods-rpms \
     sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/_copr_ublue-os-akmods.repo && \
     rpm-ostree install \
-    /tmp/akmods-extra-rpms/kmods/*facetime*.rpm \
+    /tmp/akmods-rpms/kmods/*kvmfr*.rpm \
+    /tmp/akmods-rpms/kmods/*v4l2loopback*.rpm \
+    /tmp/akmods-rpms/kmods/*wl*.rpm \
+    /tmp/akmods-extra-rpms/kmods/*facetimehd*.rpm \
     /tmp/akmods-extra-rpms/kmods/*gcadapter_oc*.rpm \
     /tmp/akmods-extra-rpms/kmods/*evdi*.rpm \
     || true && \
     sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/rpmfusion-*.repo && \
-    /usr/libexec/containerbuild/cleanup.sh && \
     ostree container commit
 
 # Remove unneeded packages
