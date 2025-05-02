@@ -4,7 +4,7 @@ COPY build_files /
 
 # Base Image
 FROM ghcr.io/ublue-os/bazzite:stable
-FROM ghcr.io/ublue-os/akmods-extra:stable AS akmods-extra
+FROM ghcr.io/ublue-os/akmods-extra:${INPUT_KERNEL_VERSION} AS akmods-extra
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
 # FROM ghcr.io/ublue-os/bluefin-nvidia:stable

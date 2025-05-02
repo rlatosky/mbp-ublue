@@ -86,6 +86,19 @@ jobs:
           sep-tags: " "
           sep-annotations: " "
 
+      - name: Inspect image and extract label
+        run: |
+          LABEL_VALUE=bazzite-$(skopeo inspect docker://ghcr.io/ublue-os/bazzite:stable | jq -r '"\(.Labels["org.opencontainers.image.version"] | split(".")[0])-\(.Labels["ostree.linux"])"')
+          echo "kernel_version=$LABEL_VALUE" >> $GITHUB_ENV
+
+      - name: Display extracted label
+        run: |
+          echo "Extracted ostree.linux label: $kernel_version"
+
+      # - name: Modify file with extracted label
+      #   run: |
+      #     sed -i "s/KERNEL_VERSION/$kernel_version/g" ./Containerfile
+
       - name: Build Image
         id: build_image
         uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
