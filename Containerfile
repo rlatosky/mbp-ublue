@@ -34,7 +34,7 @@ FROM ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION} AS akmods-extra
 #     fwupd-plugin-uefi-capsule-data && \
 
 RUN --mount=type=cache,dst=/var/cache/rpm-ostree \
-    --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
+    --mount=type=bind,from=ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION},src=/rpms,dst=/tmp/akmods-extra-rpms \
     sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/_copr_ublue-os-akmods.repo && \
     rpm-ostree install \
     /tmp/akmods-extra-rpms/kmods/*facetime*.rpm \
