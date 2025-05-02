@@ -1,12 +1,16 @@
 # Allow build scripts to be referenced without being copied into the final image
+
+ARG KERNEL_VERSION
+ENV KERNEL_VERSION=bazzite-42-6.14.4-103.bazzite.fc42.x86_64
+FROM ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION} AS akmods-extra
+
 FROM scratch AS ctx
 COPY build_files /
-ARG KERNEL_VERSION
 
 # Base Image
-FROM ghcr.io/ublue-os/bazzite:stable
-#FROM ghcr.io/ublue-os/akmods:${KERNEL_VERSION} AS akmods
-FROM ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION} AS akmods-extra
+FROM ghcr.io/ublue-os/bazzite:stable AS bazzite
+
+
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
 # FROM ghcr.io/ublue-os/bluefin-nvidia:stable
@@ -33,8 +37,8 @@ FROM ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION} AS akmods-extra
 #     fwupd-plugin-modem-manager \
 #     fwupd-plugin-uefi-capsule-data && \
 
-RUN --mount=type=cache,dst=/var/cache/rpm-ostree \
-    --mount=type=bind,from=ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION},src=/rpms,dst=/tmp/akmods-extra-rpms \
+RUN --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
+    --mount=type=cache,dst=/var/cache/rpm-ostree \
     sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/_copr_ublue-os-akmods.repo && \
     rpm-ostree install \
     /tmp/akmods-extra-rpms/kmods/*facetime*.rpm \
