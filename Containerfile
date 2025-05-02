@@ -8,7 +8,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM ghcr.io/ublue-os/bazzite:stable
+FROM ghcr.io/ublue-os/bazzite:41
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
@@ -41,6 +41,7 @@ RUN --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
     --mount=type=bind,from=akmods,src=/rpms,dst=/tmp/akmods-rpms \
     sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/_copr_ublue-os-akmods.repo && \
     find /tmp/akmods-extra-rpms && \
+    find /tmp/akmods-rpms && \
     rpm-ostree install \
     /tmp/akmods-rpms/kmods/*kvmfr*.rpm \
     /tmp/akmods-rpms/kmods/*v4l2loopback*.rpm \
@@ -51,17 +52,6 @@ RUN --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
     || true && \
     sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/rpmfusion-*.repo && \
     ostree container commit
-
-# Remove unneeded packages
-RUN --mount=type=cache,dst=/var/cache \
-    --mount=type=cache,dst=/var/log \
-    --mount=type=bind,from=ctx,source=/,target=/ctx \
-    --mount=type=tmpfs,dst=/tmp \
-    dnf5 -y remove \
-        ublue-os-update-services \
-        firefox \
-        firefox-langpacks && \
-    /ctx/cleanup
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
