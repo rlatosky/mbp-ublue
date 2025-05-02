@@ -5,7 +5,7 @@ ARG KERNEL_VERSION
 
 # Base Image
 FROM ghcr.io/ublue-os/bazzite:stable
-FROM ghcr.io/ublue-os/akmods:${KERNEL_VERSION} AS akmods
+#FROM ghcr.io/ublue-os/akmods:${KERNEL_VERSION} AS akmods
 FROM ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION} AS akmods-extra
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
