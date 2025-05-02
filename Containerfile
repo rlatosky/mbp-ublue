@@ -1,5 +1,7 @@
 # Allow build scripts to be referenced without being copied into the final image
 
+LABEL org.opencontainers.image.source=https://github.com/rlatosky/mbp-bazzite
+
 ARG KERNEL_VERSION
 FROM ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION} AS akmods-extra
 FROM ghcr.io/ublue-os/akmods:${KERNEL_VERSION} AS akmods
@@ -8,7 +10,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM ghcr.io/ublue-os/bazzite:41
+FROM ghcr.io/ublue-os/bazzite:stable
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
