@@ -1,6 +1,7 @@
 # Allow build scripts to be referenced without being copied into the final image
 
 ARG KERNEL_VERSION
+ARG BASE_IMAGE_NAME="${BASE_IMAGE_NAME:-kinoite}"
 #FROM ghcr.io/ublue-os/akmods-extra:${KERNEL_VERSION} AS akmods-extra
 FROM ghcr.io/ublue-os/akmods:${KERNEL_VERSION} AS akmods
 
@@ -110,28 +111,6 @@ RUN --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
-    if [[ "${IMAGE_FLAVOR}" =~ "asus" ]]; then \
-        dnf5 -y copr enable lukenukem/asus-linux && \
-        dnf5 -y install \
-            asusctl \
-            asusctl-rog-gui && \
-        dnf5 copr disable -y lukenukem/asus-linux \
-    ; elif [[ "${IMAGE_FLAVOR}" == "surface" ]]; then \
-        dnf5 -y config-manager addrepo --from-repofile=https://pkg.surfacelinux.com/fedora/linux-surface.repo && \
-        dnf5 -y swap \
-            --allowerasing \
-            libwacom-data libwacom-surface-data && \
-        dnf5 versionlock add \
-            libwacom-surface-data && \
-        dnf5 -y install \
-            iptsd \
-            libcamera \
-            libcamera-tools \
-            libcamera-gstreamer \
-            libcamera-ipa \
-            pipewire-plugin-libcamera && \
-        dnf5 -y config-manager setopt "linux-surface".enabled=0 \
-    ; fi && \
     /ctx/install-firmware && \
     /ctx/cleanup
 
@@ -309,6 +288,56 @@ RUN --mount=type=cache,dst=/var/cache \
     cp -r /tmp/scopebuddy/ScopeBuddy-*/bin/* /usr/bin/ && \
     /ctx/cleanup
 
+# Install Steam & Lutris, plus supporting packages
+# Downgrade ibus to fix an issue with the Steam keyboard
+RUN --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=tmpfs,dst=/tmp \
+    dnf5 -y swap \
+    --repo copr:copr.fedorainfracloud.org:bazzite-org:bazzite \
+        ibus ibus && \
+    dnf5 versionlock add \
+        ibus && \
+    dnf5 -y install \
+        gamescope.x86_64 \
+        gamescope-libs.x86_64 \
+        gamescope-libs.i686 \
+        gamescope-shaders \
+        jupiter-sd-mounting-btrfs \
+        umu-launcher \
+        dbus-x11 \
+        xdg-user-dirs \
+        gobject-introspection \
+        libFAudio.x86_64 \
+        libFAudio.i686 \
+        latencyflex-vulkan-layer \
+        vkBasalt.x86_64 \
+        vkBasalt.i686 \
+        mangohud.x86_64 \
+        mangohud.i686 \
+        libobs_vkcapture.x86_64 \
+        libobs_glcapture.x86_64 \
+        libobs_vkcapture.i686 \
+        libobs_glcapture.i686 \
+        vk_hdr_layer.x86_64 \
+        vk_hdr_layer.i686 && \
+    dnf5 -y --setopt=install_weak_deps=False install \
+        steam \
+        lutris && \
+    dnf5 -y remove \
+        gamemode && \
+    curl -Lo /tmp/latencyflex.tar.xz $(curl https://api.github.com/repos/ishitatsuyuki/LatencyFleX/releases/latest | jq -r '.assets[] | select(.name| test(".*.tar.xz$")).browser_download_url') && \
+    mkdir -p /tmp/latencyflex && \
+    tar --no-same-owner --no-same-permissions --no-overwrite-dir --strip-components 1 -xvf /tmp/latencyflex.tar.xz -C /tmp/latencyflex && \
+    rm -f /tmp/latencyflex.tar.xz && \
+    mkdir -p /usr/lib64/latencyflex && \
+    cp -r /tmp/latencyflex/wine/usr/lib/wine/* /usr/lib64/latencyflex/ && \
+    curl -Lo /usr/bin/latencyflex https://raw.githubusercontent.com/bazzite-org/LatencyFleX-Installer/main/install.sh && \
+    chmod +x /usr/bin/latencyflex && \
+    curl -Lo /usr/bin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks && \
+    chmod +x /usr/bin/winetricks && \
+    /ctx/cleanup
 
 RUN --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
