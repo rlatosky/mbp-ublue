@@ -29,17 +29,28 @@ else
     COPR_RELEASE="${RELEASE}"
 fi
 
-curl -LsSf -o /etc/yum.repos.d/_copr_ublue-os-akmods.repo \
-    https://copr.fedorainfracloud.org/coprs/ublue-os/akmods/repo/fedora-${COPR_RELEASE}/ublue-os-akmods-fedora-${COPR_RELEASE}.repo
-echo "priority=85" >> /etc/yum.repos.d/_copr_ublue-os-akmods.repo
+curl -L -o /etc/yum.repos.d/_copr_mulderje-intel-mac-rpms.repo \
+    "https://copr.fedorainfracloud.org/coprs/mulderje/intel-mac-rpms/repo/fedora-${RELEASE}/mulderje-intel-mac-rpms-fedora-${RELEASE}.repo"
 
-curl -LsSf -o /etc/yum.repos.d/_copr_mulderje-facetimehd-kmod.repo \
-    "https://copr.fedorainfracloud.org/coprs/mulderje/facetimehd-kmod/repo/fedora-${COPR_RELEASE}/mulderje-facetimehd-kmod-fedora-${COPR_RELEASE}.repo"
+echo "Fixing directory permissions for build ..."
+chmod a=rwx,u+t /tmp # fix /tmp permissions
+mkdir -p /run/akmods # fix missing location for lock file
 
 ### BUILD facetimehd (succeed or fail-fast with debug output)
-dnf install -y \
-    akmod-facetimehd-*.fc${RELEASE}.${ARCH}
+echo "Installing akmod-facetimehd-*.fc${RELEASE}.${ARCH} ..."
+dnf5 install -y akmod-facetimehd-*.fc${RELEASE}.${ARCH}
+
+echo "Patching /usr/sbin/akmods (should not see --nogpgcheck or --disablerepo flags below) ..."
+# fix the --gpgcheck and --disablerepo errors for /usr/sbin/akmods
+# see: https://universal-blue.discourse.group/t/need-help-building-system76-io-akmods/5725/3
+# Note: escape the $ and * if in double quotes, and use double quotes to avoid escaping the single quotes!
+sed -i "s/dnf -y \${pkg_install:-install} --nogpgcheck --disablerepo='\*'/dnf5 -y \${pkg_install:-install}/" /usr/sbin/akmods
+# check this is working
+cat /usr/sbin/akmods | grep "dnf5 -y"
+
+echo "Running akmods for facetimehd ..."
 akmods --force --kernels "${KERNEL}" --kmod facetimehd
+
 modinfo "/usr/lib/modules/${KERNEL}/extra/facetimehd/facetimehd.ko.xz" > /dev/null \
 || (find /var/cache/akmods/facetimehd/ -name \*.log -print -exec cat {} \; && exit 1)
 
