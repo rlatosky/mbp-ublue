@@ -38,6 +38,9 @@ FROM ghcr.io/ublue-os/bazzite:stable
 #     fwupd-plugin-modem-manager \
 #     fwupd-plugin-uefi-capsule-data && \
 
+
+#     /tmp/akmods-extra-rpms/kmods/kmod-facetimehd*.rpm \
+
 RUN --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
     --mount=type=cache,dst=/var/cache/rpm-ostree \
     --mount=type=bind,from=akmods,src=/rpms,dst=/tmp/akmods-rpms \
@@ -48,7 +51,6 @@ RUN --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
     /tmp/akmods-rpms/kmods/*kvmfr*.rpm \
     /tmp/akmods-rpms/kmods/*v4l2loopback*.rpm \
     /tmp/akmods-rpms/kmods/*wl*.rpm \
-    /tmp/akmods-extra-rpms/kmods/kmod-facetimehd*.rpm \
     /tmp/akmods-extra-rpms/kmods/*gcadapter_oc*.rpm \
     /tmp/akmods-extra-rpms/kmods/*evdi*.rpm \
     || true && \

@@ -29,8 +29,9 @@ else
     COPR_RELEASE="${RELEASE}"
 fi
 
-dnf5 download kernel-modules-core
-rpm --force -i kernel-modules-core-*.rpm
+curl -LsSf -o /etc/yum.repos.d/_copr_ublue-os-akmods.repo \
+    https://copr.fedorainfracloud.org/coprs/ublue-os/akmods/repo/fedora-${FEDORA_MAJOR_VERSION}/ublue-os-akmods-fedora-${FEDORA_MAJOR_VERSION}.repo
+echo "priority=85" >> /etc/yum.repos.d/_copr_ublue-os-akmods.repo
 
 curl -LsSf -o /etc/yum.repos.d/_copr_mulderje-facetimehd-kmod.repo \
     "https://copr.fedorainfracloud.org/coprs/mulderje/facetimehd-kmod/repo/fedora-${COPR_RELEASE}/mulderje-facetimehd-kmod-fedora-${COPR_RELEASE}.repo"
