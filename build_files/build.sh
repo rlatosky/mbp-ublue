@@ -29,6 +29,9 @@ else
     COPR_RELEASE="${RELEASE}"
 fi
 
+dnf5 download kernel-modules-core
+rpm --force -i kernel-modules-core-*.rpm
+
 curl -LsSf -o /etc/yum.repos.d/_copr_mulderje-facetimehd-kmod.repo \
     "https://copr.fedorainfracloud.org/coprs/mulderje/facetimehd-kmod/repo/fedora-${COPR_RELEASE}/mulderje-facetimehd-kmod-fedora-${COPR_RELEASE}.repo"
 
