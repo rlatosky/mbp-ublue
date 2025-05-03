@@ -11,7 +11,7 @@ COPY build_files /
 # Base Image - bazzite kernel fails to install facetimehd camera
 FROM ghcr.io/ublue-os/kinoite-main:latest AS mbp-bazzite
 
-COPY system_files/desktop/shared system_files/desktop/kinoite /
+# COPY system_files/desktop/shared system_files/desktop/kinoite /
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
