@@ -55,6 +55,7 @@ modinfo "/usr/lib/modules/${KERNEL}/extra/facetimehd/facetimehd.ko.xz" > /dev/nu
 || (find /var/cache/akmods/facetimehd/ -name \*.log -print -exec cat {} \; && exit 1)
 
 rm -f /etc/yum.repos.d/_copr_mulderje-facetimehd-kmod.repo
+rm -f /etc/yum.repos.d/_copr_mulderje-intel-mac-rpms.repo
 
 #### Example for enabling a System Unit File
 
