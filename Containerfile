@@ -11,7 +11,7 @@ COPY build_files /
 # Base Image - bazzite kernel fails to install facetimehd camera
 FROM ghcr.io/ublue-os/kinoite-main:latest AS mbp-bazzite
 
-COPY system_files/desktop/shared system_files/desktop/${BASE_IMAGE_NAME} /
+COPY system_files/desktop/shared system_files/desktop/kinoite /
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
@@ -343,47 +343,46 @@ RUN --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
-    if grep -q "kinoite" <<< "${BASE_IMAGE_NAME}"; then \
-        dnf5 -y install \
-            qt \
-            krdp \
-            steamdeck-kde-presets-desktop \
-            wallpaper-engine-kde-plugin \
-            kdeconnectd \
-            kdeplasma-addons \
-            rom-properties-kf6 \
-            fcitx5-mozc \
-            fcitx5-chinese-addons \
-            fcitx5-hangul \
-            kcm-fcitx5 \
-            ptyxis && \
-        dnf5 -y swap \
-        --repo=terra-extras \
-            kf6-kio kf6-kio && \
-        dnf5 versionlock add \
-            kf6-kio-core \
-            kf6-kio-core-libs \
-            kf6-kio-doc \
-            kf6-kio-file-widgets \
-            kf6-kio-gui \
-            kf6-kio-widgets \
-            kf6-kio-widgets-libs && \
-        dnf5 -y remove \
-            plasma-welcome \
-            plasma-welcome-fedora \
-            plasma-browser-integration \
-            konsole && \
-        git clone https://github.com/catsout/wallpaper-engine-kde-plugin.git --depth 1 --branch main /tmp/wallpaper-engine-kde-plugin && \
-        kpackagetool6 --type=Plasma/Wallpaper --global --install /tmp/wallpaper-engine-kde-plugin/plugin && \
-        sed -i '/<entry name="launchers" type="StringList">/,/<\/entry>/ s/<default>[^<]*<\/default>/<default>preferred:\/\/browser,applications:steam.desktop,applications:net.lutris.Lutris.desktop,applications:org.gnome.Ptyxis.desktop,applications:org.kde.discover.desktop,preferred:\/\/filemanager<\/default>/' /usr/share/plasma/plasmoids/org.kde.plasma.taskmanager/contents/config/main.xml && \
-        sed -i '/<entry name="favorites" type="StringList">/,/<\/entry>/ s/<default>[^<]*<\/default>/<default>preferred:\/\/browser,steam.desktop,net.lutris.Lutris.desktop,systemsettings.desktop,org.kde.dolphin.desktop,org.kde.kate.desktop,org.gnome.Ptyxis.desktop,org.kde.discover.desktop,system-update.desktop<\/default>/' /usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/config/main.xml && \
-        sed -i 's@\[Desktop Action new-window\]@\[Desktop Action new-window\]\nX-KDE-Shortcuts=Ctrl+Alt+T@g' /usr/share/applications/org.gnome.Ptyxis.desktop && \
-        sed -i '/^Comment/d' /usr/share/applications/org.gnome.Ptyxis.desktop && \
-        sed -i 's@Exec=ptyxis@Exec=kde-ptyxis@g' /usr/share/applications/org.gnome.Ptyxis.desktop && \
-        sed -i 's@Keywords=@Keywords=konsole;console;@g' /usr/share/applications/org.gnome.Ptyxis.desktop && \
-        sed -i 's/^Exec=plasma-discover/& --backends flatpak-backend/' /usr/share/applications/org.kde.discover.desktop && \
-        cp /usr/share/applications/org.gnome.Ptyxis.desktop /usr/share/kglobalaccel/org.gnome.Ptyxis.desktop && \
-        setcap 'cap_net_raw+ep' /usr/libexec/ksysguard/ksgrd_network_helper \
+    dnf5 -y install \
+        qt \
+        krdp \
+        steamdeck-kde-presets-desktop \
+        wallpaper-engine-kde-plugin \
+        kdeconnectd \
+        kdeplasma-addons \
+        rom-properties-kf6 \
+        fcitx5-mozc \
+        fcitx5-chinese-addons \
+        fcitx5-hangul \
+        kcm-fcitx5 \
+        ptyxis && \
+    dnf5 -y swap \
+    --repo=terra-extras \
+        kf6-kio kf6-kio && \
+    dnf5 versionlock add \
+        kf6-kio-core \
+        kf6-kio-core-libs \
+        kf6-kio-doc \
+        kf6-kio-file-widgets \
+        kf6-kio-gui \
+        kf6-kio-widgets \
+        kf6-kio-widgets-libs && \
+    dnf5 -y remove \
+        plasma-welcome \
+        plasma-welcome-fedora \
+        plasma-browser-integration \
+        konsole && \
+    git clone https://github.com/catsout/wallpaper-engine-kde-plugin.git --depth 1 --branch main /tmp/wallpaper-engine-kde-plugin && \
+    kpackagetool6 --type=Plasma/Wallpaper --global --install /tmp/wallpaper-engine-kde-plugin/plugin && \
+    sed -i '/<entry name="launchers" type="StringList">/,/<\/entry>/ s/<default>[^<]*<\/default>/<default>preferred:\/\/browser,applications:steam.desktop,applications:net.lutris.Lutris.desktop,applications:org.gnome.Ptyxis.desktop,applications:org.kde.discover.desktop,preferred:\/\/filemanager<\/default>/' /usr/share/plasma/plasmoids/org.kde.plasma.taskmanager/contents/config/main.xml && \
+    sed -i '/<entry name="favorites" type="StringList">/,/<\/entry>/ s/<default>[^<]*<\/default>/<default>preferred:\/\/browser,steam.desktop,net.lutris.Lutris.desktop,systemsettings.desktop,org.kde.dolphin.desktop,org.kde.kate.desktop,org.gnome.Ptyxis.desktop,org.kde.discover.desktop,system-update.desktop<\/default>/' /usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/config/main.xml && \
+    sed -i 's@\[Desktop Action new-window\]@\[Desktop Action new-window\]\nX-KDE-Shortcuts=Ctrl+Alt+T@g' /usr/share/applications/org.gnome.Ptyxis.desktop && \
+    sed -i '/^Comment/d' /usr/share/applications/org.gnome.Ptyxis.desktop && \
+    sed -i 's@Exec=ptyxis@Exec=kde-ptyxis@g' /usr/share/applications/org.gnome.Ptyxis.desktop && \
+    sed -i 's@Keywords=@Keywords=konsole;console;@g' /usr/share/applications/org.gnome.Ptyxis.desktop && \
+    sed -i 's/^Exec=plasma-discover/& --backends flatpak-backend/' /usr/share/applications/org.kde.discover.desktop && \
+    cp /usr/share/applications/org.gnome.Ptyxis.desktop /usr/share/kglobalaccel/org.gnome.Ptyxis.desktop && \
+    setcap 'cap_net_raw+ep' /usr/libexec/ksysguard/ksgrd_network_helper \
 
 # ublue-os packages
 # Homebrew & Bash Prexec
