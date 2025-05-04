@@ -88,7 +88,7 @@ jobs:
 
       - name: Inspect image and extract label
         run: |
-          LABEL_VALUE=main-$(skopeo inspect docker://ghcr.io/ublue-os/bazzite:latest | jq -r '"\(.Labels["org.opencontainers.image.version"] | split(".")[0])-\(.Labels["ostree.linux"])"')
+          LABEL_VALUE=bazzite-$(skopeo inspect docker://ghcr.io/ublue-os/bazzite:latest | jq -r '"\(.Labels["org.opencontainers.image.version"] | split(".")[0])-\(.Labels["ostree.linux"])"')
           echo "kernel_version=$LABEL_VALUE" >> $GITHUB_ENV
 
       - name: Display extracted label
