@@ -9,7 +9,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image - bazzite kernel fails to install facetimehd camera
-FROM ghcr.io/ublue-os/kinoite-main:41 AS mbp-bazzite
+FROM ghcr.io/ublue-os/kinoite-main:40 AS mbp-bazzite
 
 # COPY system_files/desktop/shared system_files/desktop/kinoite /
 
@@ -94,6 +94,7 @@ RUN --mount=type=cache,dst=/var/cache \
 RUN --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=bind,from=akmods,src=/kernel-rpms,dst=/tmp/kernel-rpms \
+    --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
     --mount=type=bind,from=akmods,src=/rpms,dst=/tmp/akmods-rpms \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
@@ -106,13 +107,13 @@ RUN --mount=type=cache,dst=/var/cache \
     dnf5 -y swap --repo copr:copr.fedorainfracloud.org:bazzite-org:bazzite bootc bootc && \
     /ctx/cleanup
 
-# Install mbp facetimehd kernel module
-RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-    --mount=type=cache,dst=/var/cache \
-    --mount=type=cache,dst=/var/log \
-    --mount=type=tmpfs,dst=/tmp \
-    /ctx/mbp-kernelmod && \
-    ostree container commit
+# # Install mbp facetimehd kernel module
+# RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+#     --mount=type=cache,dst=/var/cache \
+#     --mount=type=cache,dst=/var/log \
+#     --mount=type=tmpfs,dst=/tmp \
+#     /ctx/mbp-kernelmod && \
+#     ostree container commit
 
     # Setup firmware
 RUN --mount=type=cache,dst=/var/cache \
