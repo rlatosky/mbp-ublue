@@ -2,7 +2,7 @@
 
 ARG KERNEL_VERSION
 ARG BASE_IMAGE_NAME="${BASE_IMAGE_NAME:-kinoite}"
-FROM ghcr.io/ublue-os/akmods-extra@sha256:ae00ea0caca27bc3cb593f0ffc71f586b9cab7920cdadcb9f8a0df6a36e49867 AS akmods-extra
+#FROM ghcr.io/ublue-os/akmods-extra@sha256:ae00ea0caca27bc3cb593f0ffc71f586b9cab7920cdadcb9f8a0df6a36e49867 AS akmods-extra
 FROM ghcr.io/ublue-os/akmods:${KERNEL_VERSION} AS akmods
 
 FROM scratch AS ctx
@@ -94,7 +94,6 @@ RUN --mount=type=cache,dst=/var/cache \
 RUN --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=bind,from=akmods,src=/kernel-rpms,dst=/tmp/kernel-rpms \
-    --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
     --mount=type=bind,from=akmods,src=/rpms,dst=/tmp/akmods-rpms \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
@@ -107,13 +106,13 @@ RUN --mount=type=cache,dst=/var/cache \
     dnf5 -y swap --repo copr:copr.fedorainfracloud.org:bazzite-org:bazzite bootc bootc && \
     /ctx/cleanup
 
-# # Install mbp facetimehd kernel module
-# RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-#     --mount=type=cache,dst=/var/cache \
-#     --mount=type=cache,dst=/var/log \
-#     --mount=type=tmpfs,dst=/tmp \
-#     /ctx/mbp-kernelmod && \
-#     ostree container commit
+# Install mbp facetimehd kernel module
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/mbp-kernelmod && \
+    ostree container commit
 
     # Setup firmware
 RUN --mount=type=cache,dst=/var/cache \
