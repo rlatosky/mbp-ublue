@@ -114,13 +114,13 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/mbp-kernelmod && \
     ostree container commit
 
-    # Setup firmware
-RUN --mount=type=cache,dst=/var/cache \
-    --mount=type=cache,dst=/var/log \
-    --mount=type=bind,from=ctx,source=/,target=/ctx \
-    --mount=type=tmpfs,dst=/tmp \
-    /ctx/install-firmware && \
-    /ctx/cleanup
+#     # Setup firmware
+# RUN --mount=type=cache,dst=/var/cache \
+#     --mount=type=cache,dst=/var/log \
+#     --mount=type=bind,from=ctx,source=/,target=/ctx \
+#     --mount=type=tmpfs,dst=/tmp \
+#     /ctx/install-firmware && \
+#     /ctx/cleanup
 
 # Install patched fwupd
 # Install Valve's patched Mesa, Pipewire, Bluez, and Xwayland
