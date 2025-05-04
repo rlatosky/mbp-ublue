@@ -23,15 +23,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ inputs.brand_name}}-${{ inputs.stream_name }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  packages: write
-  id-token: write
-
 jobs:
   build_push:
     name: Build and push image
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
 
     steps:
       # These stage versions are pinned by https://github.com/renovatebot/renovate
