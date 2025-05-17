@@ -20,4 +20,4 @@ dnf5 -y install timg htop
 
 dnf5 -y copr enable kylegospo/webapp-manager
 dnf5 -y install webapp-manager
-
+dnf5 -y copr disable kylegospo/webapp-manager
