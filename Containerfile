@@ -5,13 +5,13 @@ LABEL org.opencontainers.image.source=https://github.com/rlatosky/mbp-bazzite
 ARG KERNEL_VERSION
 ARG BASE_IMAGE_NAME="${BASE_IMAGE_NAME:-kinoite}"
 #FROM ghcr.io/ublue-os/akmods-extra@sha256:ae00ea0caca27bc3cb593f0ffc71f586b9cab7920cdadcb9f8a0df6a36e49867 AS akmods-extra
-FROM ghcr.io/ublue-os/akmods:${KERNEL_VERSION} AS akmods
+#FROM ghcr.io/ublue-os/akmods:${KERNEL_VERSION} AS akmods
 
 FROM scratch AS ctx
 COPY build_files /
 
 # Base Image - bazzite kernel fails to install facetimehd camera
-FROM ghcr.io/ublue-os/bazzite:latest AS mbp-bazzite
+FROM ghcr.io/ublue-os/aurora:latest AS mbp-bazzite
 
 # COPY system_files/desktop/shared system_files/desktop/kinoite /
 
