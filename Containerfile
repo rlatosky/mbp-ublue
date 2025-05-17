@@ -46,7 +46,15 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
-    /ctx/mbp-kernelmod && \
+    /ctx/build-kmod-facetimehd && \
+    /ctx/cleanup && \
+    ostree container commit
+
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/install-other-packages && \
     /ctx/cleanup && \
     ostree container commit
 
