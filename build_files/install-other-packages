@@ -16,8 +16,23 @@ set -ouex pipefail
 # Disable COPRs so they don't end up enabled on the final image:
 # dnf5 -y copr disable ublue-os/staging
 
-dnf5 -y install timg htop
+dnf5 -y install timg htop btop lm_sensors
 
 dnf5 -y copr enable kylegospo/webapp-manager
 dnf5 -y install webapp-manager
 dnf5 -y copr disable kylegospo/webapp-manager
+
+dnf5 -y copr enable pgdev/ghostty
+dnf5 -y install ghostty
+dnf5 -y copr disable pgdev/ghostty
+
+#install macbook ambient sensor
+git clone https://github.com/harttle/macbook-lighter.git
+cd macbook-lighter
+install -Dm644 macbook-lighter.conf /etc/macbook-lighter.conf
+install -Dm644 "macbook-lighter.service" "/usr/lib/systemd/system/macbook-lighter.service"
+install -Dm755 "src/macbook-lighter-ambient.sh" "/usr/bin/macbook-lighter-ambient"
+install -Dm755 "src/macbook-lighter-screen.sh" "/usr/bin/macbook-lighter-screen"
+install -Dm755 "src/macbook-lighter-kbd.sh" "/usr/bin/macbook-lighter-kbd"
+cd ..
+rm -rf macbook-lighter
