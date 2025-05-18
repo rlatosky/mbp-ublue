@@ -21,10 +21,10 @@ dnf5 -y install timg htop btop lm_sensors
 dnf5 -y copr enable kylegospo/webapp-manager
 dnf5 -y install webapp-manager
 dnf5 -y copr disable kylegospo/webapp-manager
-
-dnf5 -y copr enable pgdev/ghostty
-dnf5 -y install ghostty
-dnf5 -y copr disable pgdev/ghostty
+#
+# dnf5 -y copr enable pgdev/ghostty
+# dnf5 -y install ghostty
+# dnf5 -y copr disable pgdev/ghostty
 
 #install macbook ambient sensor
 git clone https://github.com/harttle/macbook-lighter.git
