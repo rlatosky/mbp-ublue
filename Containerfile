@@ -11,7 +11,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image - bazzite kernel fails to install facetimehd camera
-FROM ghcr.io/ublue-os/aurora:stable AS mbp-bazzite
+FROM ghcr.io/ublue-os/aurora-dx:stable AS mbp-bazzite
 
 # COPY system_files/desktop/shared system_files/desktop/kinoite /
 
@@ -55,6 +55,14 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/install-other-packages && \
+    /ctx/cleanup && \
+    ostree container commit
+
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/add-systemd-services && \
     /ctx/cleanup && \
     ostree container commit
 
