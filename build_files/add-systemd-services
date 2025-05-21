@@ -3,7 +3,7 @@ echo "
 Description=Fix for mac suspend issue
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c "echo XHC1 > /proc/acpi/wakeup && echo LID0 > /proc/acpi/wakeup"
+ExecStart=/bin/sh -c \"echo XHC1 > /proc/acpi/wakeup && echo LID0 > /proc/acpi/wakeup\"
 [Install]
 WantedBy=multi-user.target
 " > /etc/systemd/system/suspend-fix.service
