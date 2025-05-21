@@ -16,7 +16,7 @@ set -ouex pipefail
 # Disable COPRs so they don't end up enabled on the final image:
 # dnf5 -y copr disable ublue-os/staging
 
-dnf5 -y install timg htop btop lm_sensors trash clang clang-analyzer
+dnf5 -y install timg htop btop lm_sensors trash clang clang-analyzer nodejs-bash-language-server
 
 dnf5 -y copr enable kylegospo/webapp-manager
 dnf5 -y install webapp-manager
