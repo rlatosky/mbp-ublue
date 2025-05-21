@@ -11,7 +11,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image - bazzite kernel fails to install facetimehd camera
-FROM ghcr.io/ublue-os/aurora-dx:stable AS mbp-bazzite
+FROM ghcr.io/ublue-os/aurora:stable AS mbp-bazzite
 
 # COPY system_files/desktop/shared system_files/desktop/kinoite /
 
