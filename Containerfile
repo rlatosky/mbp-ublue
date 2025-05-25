@@ -1,6 +1,6 @@
 # Allow build scripts to be referenced without being copied into the final image
 
-LABEL org.opencontainers.image.source=https://github.com/rlatosky/mbp-bazzite
+LABEL org.opencontainers.image.source=https://github.com/rlatosky/mbp-ublue
 
 ARG KERNEL_VERSION
 ARG BASE_IMAGE_NAME="${BASE_IMAGE_NAME:-kinoite}"
@@ -11,7 +11,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image - bazzite kernel fails to install facetimehd camera
-FROM ghcr.io/ublue-os/aurora:stable AS mbp-bazzite
+FROM ghcr.io/ublue-os/aurora:stable AS mbp-ublue
 
 # COPY system_files/desktop/shared system_files/desktop/kinoite /
 
