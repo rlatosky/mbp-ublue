@@ -1,4 +1,5 @@
-# image-template
+# image-template (mbp-ublue)
+A ublue image with macbook-specific (best for models between 2009 - 2019) packages. Includes the KDE desktop and other utilities. The Facetime HD camera works out of the box!
 
 # Purpose
 
