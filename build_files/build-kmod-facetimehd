@@ -21,7 +21,7 @@ dnf install -y \
     akmod-facetimehd-*.fc${RELEASE}.${ARCH}
 akmods --force --kernels "${KERNEL}" --kmod facetimehd
 modinfo "/usr/lib/modules/${KERNEL}/extra/facetimehd/facetimehd.ko.xz" > /dev/null \
-|| (find /var/cache/akmods/facetimehd/ -name \*.log -print -exec cat {} \; && journalctl -t 'rpm-ostree(akmod-facetimehd.post)' && exit 1)
+|| (journalctl -t 'rpm-ostree(akmod-facetimehd.post)' \; && exit 1)
 
 
 
