@@ -42,13 +42,13 @@ FROM ghcr.io/ublue-os/aurora:stable AS mbp-ublue
 #     fwupd-plugin-uefi-capsule-data && \
 
 # Install mbp facetimehd kernel module
-# RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-#    --mount=type=cache,dst=/var/cache \
-#    --mount=type=cache,dst=/var/log \
-#    --mount=type=tmpfs,dst=/tmp \
-#    /ctx/build-kmod-facetimehd && \
-#    /ctx/cleanup && \
-#    ostree container commit
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/build-kmod-facetimehd && \
+    /ctx/cleanup && \
+    ostree container commit
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
