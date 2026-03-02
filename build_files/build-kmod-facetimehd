@@ -12,8 +12,9 @@ else
     COPR_RELEASE="${RELEASE}"
 fi
 
-curl -LsSf -o /etc/yum.repos.d/_copr_mulderje-facetimehd-kmod.repo \
-    "https://copr.fedorainfracloud.org/coprs/mulderje/facetimehd-kmod/repo/fedora-${COPR_RELEASE}/mulderje-facetimehd-kmod-fedora-${COPR_RELEASE}.repo"
+
+curl -LsSf -o /etc/yum.repos.d/_copr_mulderje-intel-mac-rpms.repo \
+    "https://copr.fedorainfracloud.org/coprs/mulderje/facetimehd-kmod/repo/fedora-${COPR_RELEASE}/mulderje-intel-mac-rpms-fedora-${COPR_RELEASE}.repo"
 
 ### BUILD facetimehd (succeed or fail-fast with debug output)
 dnf install -y \
